@@ -5,6 +5,62 @@
 #include <dirent.h>
 #include "commands.h"
 
+void cmd_cp(char *args[], int count) {
+    if (count != 3) {
+        printf("Usage: cp <source> <destination>\n");
+        return;
+    }
+
+    FILE *src = fopen(args[1], "rb");
+    if (src == NULL) {
+        perror("cp");
+        return;
+    }
+
+    FILE *dest = fopen(args[2], "wb");
+    if (dest == NULL) {
+        perror("cp");
+        fclose(src);
+        return;
+    }
+
+    char buffer[1024];
+    size_t bytes;
+
+    while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+        fwrite(buffer, 1, bytes, dest);
+    }
+
+    fclose(src);
+    fclose(dest);
+}
+
+void cmd_rm(char *args[], int count) {
+    if (count != 2) {
+        printf("Usage: rm <filename>\n");
+        return;
+    }
+
+    if (remove(args[1]) == 0) {
+        printf("File removed successfully\n");
+    } else {
+        perror("rm");
+    }
+}
+
+void cmd_mv(char *args[], int count) {
+    if (count != 3) {
+        printf("Usage: mv <source> <destination>\n");
+        return;
+    }
+
+    if (rename(args[1], args[2]) == 0) {
+        printf("File moved/renamed successfully\n");
+    } else {
+        perror("mv");
+    }
+}
+
 void cmd_ls() {
     DIR *dir;
     struct dirent *entry;
