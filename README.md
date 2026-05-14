@@ -92,7 +92,7 @@ file-browser> exit
 - `unistd.h`
 - `dirent.h`
 
-These are standard low-level C/POSIX libraries.
+These are standard low-level C libraries.
 
 ---
 
